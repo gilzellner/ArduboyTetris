@@ -365,6 +365,17 @@ void drawPiece(Piece& piece) {
   }
 }
 
+void drawGhostPiece(Piece& piece) {
+  for(int i = 0; i < piece.width; ++i) {
+    for(int j = 0; j < piece.width; ++j) {
+      if(piece.shape[i][j] == 1) {
+        arduboy.drawRect(BOARD_X + (piece.col + j) * CELL_SIZE, BOARD_Y + (piece.row + (i-2)) * CELL_SIZE, CELL_SIZE, CELL_SIZE, WHITE);
+      }
+    }
+  }
+}
+
+
 void drawGameInfo() {
   arduboy.drawRect(60, 0, 47, 11, WHITE);
   arduboy.drawRect(60, 12, 47, 52, WHITE);

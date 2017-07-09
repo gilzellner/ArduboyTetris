@@ -38,6 +38,8 @@ bool holdLocked = false;
 int level;
 int prevlines = 0;
 int clearedLines;
+double tetrisx4 = 0;
+double efficiency = 0;
 unsigned long score;
 
 unsigned char getBoardPos(int row, int col) {
@@ -84,6 +86,11 @@ bool isValid(Piece& piece) {
   return true;
 }
 
+void update_efficiency()
+{
+  efficiency = tetrisx4 / (double)clearedLines
+}
+
 void addScore(int numLines) {
   int points;
   switch(numLines) {
@@ -98,6 +105,7 @@ void addScore(int numLines) {
       break;
     case 4:
       points = 800 * level;
+      tetrisx4 += 4 ;
       if (prevlines == 4)
       {
         points += 400 * level; // 3/2 like Tetris DS
@@ -114,6 +122,7 @@ void addScore(int numLines) {
       prevlines = numLines;
     }
   score += points;
+  update_efficiency();
 }
 
 void clearLine(int clearRow) {
@@ -313,6 +322,15 @@ void manageGame() {
   }
 }
 
+void drawNotice(char* text)
+{
+  arduboy.setCursor(WIDTH / 2 - 16, HEIGHT / 2 - 5);
+  arduboy.print(text);
+  arduboy.display();
+  delay(INIT_DROP_DELAY);
+
+}
+
 void drawTetris()
 {
   arduboy.setCursor(WIDTH / 2 - 16, HEIGHT / 2 - 5);
@@ -374,8 +392,10 @@ void drawGameInfo() {
   arduboy.print(level);
   arduboy.setCursor(66, 14);
   arduboy.print("Lines:");
-  arduboy.setCursor(66, 24);
   arduboy.print(clearedLines);
+  arduboy.setCursor(66, 24);
+  arduboy.print("Eff:");
+  arduboy.print(efficiency);
   arduboy.setCursor(66, 34);
   arduboy.print("Score:");
   arduboy.setCursor(66, 44);

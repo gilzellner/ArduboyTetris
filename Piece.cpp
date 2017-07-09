@@ -54,6 +54,7 @@ Piece::Piece() {
 Piece::Piece(int col, int row, int index) {
   this->col = col;
   this->row = row;
+  this->ghost_row = row;
   shapeIndex = index;
 
   for(int i = 0; i < 4; ++i) {

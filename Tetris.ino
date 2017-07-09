@@ -146,6 +146,47 @@ void clearLines() {
   dropDelay = max(INIT_DROP_DELAY * speedup, 0);
 }
 
+void setGhostPieceLocation(Piece& piece) {
+  bool isDropped = false;
+  while (isDropped == false)
+  {
+    for(int row = 0; row < piece.width; ++row) {
+      for(int col = 0; col < piece.width; ++col) {
+        if((piece.shape[row][col] == 1) && 
+          ((getBoardPos(piece.ghost_row + row + 1, piece.col + col) == 1) || (piece.ghost_row + row + 1 >= BOARD_HEIGHT)))
+        {
+          isDropped = true;
+        }
+      }
+    }
+
+    if(isDropped) {
+      bool inBounds = false;
+      for(int i = 0; i < piece.width; ++i) {
+        for(int j = 0; j < piece.width; ++j) {
+          if(piece.shape[i][j] == 1) {
+            setBoardPos(piece.ghost_row + i, piece.col + j, 1);
+
+            if(piece.ghost_row + i > 1) {
+              inBounds = true;
+            }
+          }
+        }
+      }
+      pieceActive = false;
+      
+      if(!inBounds) {
+        return;
+      }
+      else {
+        return;
+      }
+    }
+    else {
+      piece.ghost_row++;
+    }
+}
+
 void dropPiece(Piece& piece) {
   bool isDropped = false;
   for(int row = 0; row < piece.width; ++row) {
@@ -369,7 +410,7 @@ void drawGhostPiece(Piece& piece) {
   for(int i = 0; i < piece.width; ++i) {
     for(int j = 0; j < piece.width; ++j) {
       if(piece.shape[i][j] == 1) {
-        arduboy.drawRect(BOARD_X + (piece.col + j) * CELL_SIZE, BOARD_Y + (piece.row + (i-2)) * CELL_SIZE, CELL_SIZE, CELL_SIZE, BLACK);
+        arduboy.drawRect(BOARD_X + (piece.col + j) * CELL_SIZE, BOARD_Y + (piece.ghost_row + (i-2)) * CELL_SIZE, CELL_SIZE, CELL_SIZE, BLACK);
       }
     }
   }
@@ -410,6 +451,7 @@ void drawFrame() {
   drawBackground();
   drawBoard();
   drawPiece(curPiece);
+  drawGhostPiece(curPiece)
   drawGameInfo();
   if(gameOver) {
     drawGameOver();

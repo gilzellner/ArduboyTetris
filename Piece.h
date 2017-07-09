@@ -6,6 +6,7 @@ class Piece {
   public:
     int col;
     int row;
+    int ghost_row;
     int width;
     unsigned char shape[4][4];
 
